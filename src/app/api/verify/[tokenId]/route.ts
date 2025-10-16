@@ -1,11 +1,12 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
+// ✅ Force the context to conform to what Next expects
 export async function GET(
   request: NextRequest,
-  context: { params?: { tokenId?: string } }
-) {
-  const tokenId = context.params?.tokenId;
+  context: { params: Record<string, string> }
+): Promise<Response> {
+  const tokenId = context.params.tokenId;
 
   if (!tokenId) {
     return NextResponse.json({ error: "Token ID is required" }, { status: 400 });
