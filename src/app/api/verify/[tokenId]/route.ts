@@ -1,12 +1,11 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
-// ✅ Use an inline type instead of RouteContext
 export async function GET(
   request: NextRequest,
-  context: { params: { tokenId: string } }
+  context: { params?: { tokenId?: string } }
 ) {
-  const { tokenId } = context.params;
+  const tokenId = context.params?.tokenId;
 
   if (!tokenId) {
     return NextResponse.json({ error: "Token ID is required" }, { status: 400 });
