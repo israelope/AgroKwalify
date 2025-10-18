@@ -123,7 +123,7 @@ export default function HomePage() {
     <main className="flex min-h-screen flex-col items-center justify-center bg-gray-900 text-white p-8">
       <div className="w-full max-w-md space-y-8">
         <div>
-          <h1 className="text-3xl font-bold text-center">AgroKwalify.</h1>
+          <h1 className="text-3xl font-bold text-center">AgroKwalify</h1>
           <p className="mt-2 text-center text-gray-400">Certify Your Agricultural Produce on Hedera</p>
         </div>
         <form onSubmit={handleSubmit} suppressHydrationWarning className="mt-8 space-y-6 bg-gray-800 p-8 rounded-lg shadow-lg">
