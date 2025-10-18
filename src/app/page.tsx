@@ -70,7 +70,7 @@ function Verifier() {
             View HCS Proof on HashScan
           </a>
           {/* --- NEW: The "Simulate Purchase" button --- */}
-          <button 
+          <button
             onClick={handleSimulatePurchase}
             className="w-full bg-yellow-500 text-black p-3 mt-4 rounded-md font-bold hover:bg-yellow-600"
           >
@@ -89,27 +89,51 @@ export default function HomePage() {
   const [checklist, setChecklist] = useState({ handPicked: false, moistureProof: false });
   const [isLoading, setIsLoading] = useState(false);
   const [responseMessage, setResponseMessage] = useState<React.ReactNode>('');
+  const [copied, setCopied] = useState(false);
+
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setIsLoading(true);
     setResponseMessage('');
+
     try {
       const response = await fetch('/api/certify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ productName, qualityChecks: checklist }),
       });
+
       const result = await response.json();
       if (!response.ok) throw new Error(result.message || 'Something went wrong');
-      
+
       const explorerUrl = `https://hashscan.io/testnet/token/${result.tokenId}`;
+
+      // JSX message with copy button
       setResponseMessage(
         <>
           Success! Your Certificate NFT was created. <br />
-          <a href={explorerUrl} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">
-            View Token {result.tokenId} on HashScan
-          </a>
+          <div className="flex items-center gap-2 mt-1">
+            <a
+              href={explorerUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-400 hover:underline text-center"
+            >
+              View Token {result.tokenId} on HashScan
+            </a>
+            <button
+              onClick={() => {
+                navigator.clipboard.writeText(result.tokenId);
+                setCopied(true);
+                setTimeout(() => setCopied(false), 2000);
+              }}
+              className="bg-gray-700 text-white text-sm px-2 py-1 rounded hover:bg-gray-600 text-center"
+            >
+              {copied ? 'Copied!' : 'Copy TokenId'}
+            </button>
+
+          </div>
         </>
       );
     } catch (error: any) {
@@ -118,7 +142,8 @@ export default function HomePage() {
       setIsLoading(false);
     }
   };
-  
+
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-gray-900 text-white p-8">
       <div className="w-full max-w-md space-y-8">
@@ -142,11 +167,11 @@ export default function HomePage() {
           <div className="space-y-4">
             <p className="text-sm font-medium text-gray-300">Quality Checklist</p>
             <div className="flex items-center">
-              <input id="hand-picked" type="checkbox" checked={checklist.handPicked} onChange={(e) => setChecklist({...checklist, handPicked: e.target.checked})} className="h-4 w-4 rounded border-gray-500 bg-gray-700 text-blue-600" />
+              <input id="hand-picked" type="checkbox" checked={checklist.handPicked} onChange={(e) => setChecklist({ ...checklist, handPicked: e.target.checked })} className="h-4 w-4 rounded border-gray-500 bg-gray-700 text-blue-600" />
               <label htmlFor="hand-picked" className="ml-3 block text-sm text-gray-300">Hand-Picked & Stone-Free</label>
             </div>
             <div className="flex items-center">
-              <input id="moisture-proof" type="checkbox" checked={checklist.moistureProof} onChange={(e) => setChecklist({...checklist, moistureProof: e.target.checked})} className="h-4 w-4 rounded border-gray-500 bg-gray-700 text-blue-600" />
+              <input id="moisture-proof" type="checkbox" checked={checklist.moistureProof} onChange={(e) => setChecklist({ ...checklist, moistureProof: e.target.checked })} className="h-4 w-4 rounded border-gray-500 bg-gray-700 text-blue-600" />
               <label htmlFor="moisture-proof" className="ml-3 block text-sm text-gray-300">Stored in Moisture-Proof Bag</label>
             </div>
           </div>
