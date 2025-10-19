@@ -28,7 +28,7 @@ export async function GET(
     console.error(`Error verifying token ${tokenId}:`, error.message);
     
     const status = error.response?.status || 500;
-    const message = error.response?.data?.message || "Internal Server Error";
+    const message = error.response?.data?.message || "Invalid Token ID";
 
     return NextResponse.json({ message }, { status });
   }
