@@ -1,36 +1,32 @@
 'use client';
 
 import { useState } from 'react';
+// 1. Import the necessary components from Clerk and Next.js
+import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
+import Link from 'next/link';
 
 //=============================================================================
-// SECTION 1: CERTIFICATION COMPONENT (Top Half of the Page)
-// This component handles the main title, the certification form, and its results.
+// SECTION 1: CERTIFIER COMPONENT (No changes here)
+// Your existing component remains untouched.
 //=============================================================================
 function Certifier() {
-  // State for the certification form inputs
   const [productName, setProductName] = useState('');
   const [checklist, setChecklist] = useState({ handPicked: false, moistureProof: false });
-  
-  // State for handling API request status and results
   const [isLoading, setIsLoading] = useState(false);
   const [certificationResult, setCertificationResult] = useState<{ tokenId: string } | null>(null);
   const [errorMessage, setErrorMessage] = useState('');
-
-  // State for the "Copy ID" button feedback
   const [isCopied, setIsCopied] = useState(false);
 
-  // Function to copy the Token ID to the clipboard
   const handleCopy = async (tokenId: string) => {
     try {
       await navigator.clipboard.writeText(tokenId);
       setIsCopied(true);
-      setTimeout(() => setIsCopied(false), 2000); // Reset feedback after 2s
+      setTimeout(() => setIsCopied(false), 2000);
     } catch (err) {
       console.error('Failed to copy text: ', err);
     }
   };
 
-  // Function to submit the certification form data
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setIsLoading(true);
@@ -55,22 +51,14 @@ function Certifier() {
 
   return (
     <div className="w-full max-w-md space-y-8">
-      {/*-- Part 1.1: Main Title and Subtitle --*/}
       <div>
         <h1 className="text-3xl font-bold text-center">AgroKwalify</h1>
         <p className="mt-2 text-center text-gray-400">Certify Your Agricultural Produce on Hedera</p>
       </div>
-      
-      {/*-- Part 1.2: Certification Form --*/}
       <form onSubmit={handleSubmit} suppressHydrationWarning className="mt-8 space-y-6 bg-gray-800 p-8 rounded-lg shadow-lg">
         <div>
           <label htmlFor="product-name" className="block text-sm font-medium text-gray-300">Product Name</label>
-          <input
-            id="product-name" type="text" required value={productName}
-            onChange={(e) => setProductName(e.target.value)}
-            className="mt-1 block w-full rounded-md border-gray-600 bg-gray-700 text-white shadow-sm p-2"
-            placeholder="e.g., Stone-Free Ewa Oloyin"
-          />
+          <input id="product-name" type="text" required value={productName} onChange={(e) => setProductName(e.target.value)} className="mt-1 block w-full rounded-md border-gray-600 bg-gray-700 text-white shadow-sm p-2" placeholder="e.g., Stone-Free Ewa Oloyin" />
         </div>
         <div className="space-y-4">
           <p className="text-sm font-medium text-gray-300">Quality Checklist</p>
@@ -89,8 +77,6 @@ function Certifier() {
           </button>
         </div>
       </form>
-
-      {/*-- Part 1.3: Certification Result (Success Message) --*/}
       {certificationResult && (
         <div className="mt-4 text-center text-sm text-gray-300">
           Success! Your Certificate NFT was created.
@@ -104,28 +90,21 @@ function Certifier() {
           </div>
         </div>
       )}
-
-      {/*-- Part 1.4: Certification Result (Error Message) --*/}
       {errorMessage && <div className="mt-4 text-center text-sm text-red-400">{errorMessage}</div>}
     </div>
   );
 }
 
-
 //=============================================================================
-// SECTION 2: VERIFIER COMPONENT (Bottom Half of the Page)
-// This component handles the verification form, its results, and the purchase simulation.
+// SECTION 2: VERIFIER COMPONENT (No changes here)
+// Your existing component remains untouched.
 //=============================================================================
 function Verifier() {
-  // State for the verification form input
   const [tokenId, setTokenId] = useState('');
-  
-  // State for handling API request status and results
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
   const [error, setError] = useState('');
 
-  // Function to submit the verification form
   const handleVerify = async (event: React.FormEvent) => {
     event.preventDefault();
     setIsLoading(true);
@@ -144,38 +123,25 @@ function Verifier() {
     }
   };
   
-  // Function to simulate a product purchase
   const handleSimulatePurchase = () => {
     alert("Purchase Simulated! In a full version, a smart contract would lock funds and transfer this NFT to the buyer's account upon delivery confirmation.");
   };
 
   return (
     <div className="w-full max-w-md space-y-4 mt-16">
-      {/*-- Part 2.1: Verifier Title --*/}
       <h2 className="text-2xl font-bold text-center">Verify a Product</h2>
-      
-      {/*-- Part 2.2: Verification Form --*/}
       <form onSubmit={handleVerify} className="space-y-6 bg-gray-800 p-8 rounded-lg">
         <div>
-          <label htmlFor="token-id" className="block text-sm font-medium text-gray-300">
-            Enter Certificate Token ID
-          </label>
-          <input
-            id="token-id" type="text" value={tokenId}
-            onChange={(e) => setTokenId(e.target.value)} required
-            className="mt-1 block w-full bg-gray-700 border border-gray-600 p-3 rounded-md focus:ring-2 focus:ring-green-500 outline-none"
-            placeholder="0.0.1234567"
-          />
+          <label htmlFor="token-id" className="block text-sm font-medium text-gray-300">Enter Certificate Token ID</label>
+          <input id="token-id" type="text" value={tokenId} onChange={(e) => setTokenId(e.target.value)} required className="mt-1 block w-full bg-gray-700 border border-gray-600 p-3 rounded-md focus:ring-2 focus:ring-green-500 outline-none" placeholder="0.0.1234567" />
         </div>
         <button type="submit" disabled={isLoading} className="w-full bg-green-600 p-3 rounded-md font-bold text-white hover:bg-green-700 disabled:bg-gray-500">
           {isLoading ? 'Verifying...' : 'Verify Certificate'}
         </button>
       </form>
       
-      {/*-- Part 2.3: Verification Result (Error Message) --*/}
       {error && <div className="mt-4 p-4 rounded bg-red-900/20 text-red-300 text-center"><p><b>Error:</b> {error}</p></div>}
       
-      {/*-- Part 2.4: Verification Result (Success Message) --*/}
       {result && (
         <div className="bg-gray-700 p-4 rounded-lg mt-4 text-center">
           <h3 className="font-bold text-green-300">Verification Successful!</h3>
@@ -192,16 +158,43 @@ function Verifier() {
   );
 }
 
-
 //=============================================================================
-// FINAL PAGE ASSEMBLY
-// The main page component that renders the Certifier and Verifier in order.
+// FINAL PAGE ASSEMBLY (with Authentication)
+// This is the only component that exports, controlling the overall page.
 //=============================================================================
 export default function HomePage() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-gray-900 text-white p-8">
-      <Certifier />
-      <Verifier />
+    <main className="flex min-h-screen flex-col items-center justify-center bg-gray-900 text-white p-8 relative">
+      {/* 2. An unobtrusive header in the top-right corner */}
+      <header className="absolute top-0 right-0 p-8">
+        <SignedIn>
+          {/* Shows a profile button when logged in */}
+          <UserButton afterSignOutUrl="/" />
+        </SignedIn>
+        <SignedOut>
+          {/* Shows a "Sign In" link when logged out */}
+          <Link href="/sign-in" className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+            Sign In
+          </Link>
+        </SignedOut>
+      </header>
+
+      {/* 3. Logic to show content based on auth state */}
+      <SignedIn>
+        {/* If the user is signed in, we render your original layout exactly as it was. */}
+        <>
+          <Certifier />
+          <Verifier />
+        </>
+      </SignedIn>
+      <SignedOut>
+        {/* If the user is a guest, we show a centered welcome message. */}
+        <div className="text-center">
+          <h1 className="text-4xl font-bold">Welcome to AgroKwalify</h1>
+          <p className="mt-4 text-gray-400 text-lg">The Operating System for Agricultural Trust.</p>
+          <p className="mt-2 text-gray-400">Please sign in to continue.</p>
+        </div>
+      </SignedOut>
     </main>
   );
 }
